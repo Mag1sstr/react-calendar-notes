@@ -17,7 +17,7 @@ const Schedule: FunctionComponent = observer(() => {
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [openModal, setOpenModal] = useState(false);
-  const [selectDay, setSelectDay] = useState(0);
+  const [selectDay, setSelectDay] = useState<null | IMonth>(null);
 
   // const currDate = new Date();
 
@@ -25,7 +25,7 @@ const Schedule: FunctionComponent = observer(() => {
     ...Array(new Date(currentYear, currentMonth + 1, 0).getDate()),
   ].map((_, i) => ({ day: i + 1, task: "", taskColor: null }));
 
-  const handleClickTask = (day: number) => {
+  const handleClickTask = (day: IMonth) => {
     setOpenModal(true);
     setSelectDay(day);
   };
@@ -44,6 +44,8 @@ const Schedule: FunctionComponent = observer(() => {
 
   const monthData =
     SavedMonthStore.getMonth(currentYear, currentMonth) ?? daysCurrMonth;
+
+  console.log(selectDay?.day);
 
   return (
     <div className="w-full min-h-screen  flex items-center justify-center">
@@ -79,10 +81,14 @@ const Schedule: FunctionComponent = observer(() => {
               key={el.day}
               className={`p-[20px] font-bold text-[18px] rounded-lg cursor-pointer transition-all hover:scale-110 hover:shadow-lg word-break `}
               style={{ backgroundColor: el.taskColor ?? "#fff" }}
-              onClick={() => handleClickTask(el.day)}
+              onClick={() => handleClickTask(el)}
               draggable
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
+              onDragStart={(e) => {
+                setSelectDay(el);
+              }}
+              onDragEnd={() => {}}
             >
               {el.day}
               {!!el.task.length && <p>{el.task}</p>}
