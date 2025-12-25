@@ -30,13 +30,17 @@ const Schedule: FunctionComponent = observer(() => {
     setSelectDay(day);
   };
 
-  const handleDragOver = (item: DragEvent<HTMLLIElement>) => {
-    (item.target as HTMLLIElement).style.backgroundColor = "#b1ff9c";
-    (item.target as HTMLLIElement).style.outline = "2px solid #b1ff9c";
-    (item.target as HTMLLIElement).style.outlineOffset = "4px";
-    (item.target as HTMLLIElement).style.transform = "scale(1.2)";
+  const handleDragOver = (event: DragEvent<HTMLLIElement>) => {
+    (event.target as HTMLLIElement).style.backgroundColor = "#b1ff9c";
+    (event.target as HTMLLIElement).style.outline = "2px solid #b1ff9c";
+    (event.target as HTMLLIElement).style.outlineOffset = "4px";
+    (event.target as HTMLLIElement).style.transform = "scale(1.2)";
   };
-  const handleDragLeave = (item: IMonth) => {};
+  const handleDragLeave = (event: DragEvent<HTMLLIElement>) => {
+    (event.target as HTMLLIElement).style.backgroundColor = "#fff";
+    (event.target as HTMLLIElement).style.outline = "none";
+    (event.target as HTMLLIElement).style.transform = "scale(1)";
+  };
 
   const monthData =
     SavedMonthStore.getMonth(currentYear, currentMonth) ?? daysCurrMonth;
@@ -77,12 +81,8 @@ const Schedule: FunctionComponent = observer(() => {
               style={{ backgroundColor: el.taskColor ?? "#fff" }}
               onClick={() => handleClickTask(el.day)}
               draggable
-              onDragOver={(item) => {}}
-              onDragLeave={(item) => {
-                (item.target as HTMLLIElement).style.backgroundColor = "#fff";
-                (item.target as HTMLLIElement).style.outline = "none";
-                (item.target as HTMLLIElement).style.transform = "scale(1)";
-              }}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
             >
               {el.day}
               {!!el.task.length && <p>{el.task}</p>}
