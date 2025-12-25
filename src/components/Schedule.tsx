@@ -31,15 +31,16 @@ const Schedule: FunctionComponent = observer(() => {
   };
 
   const handleDragOver = (event: DragEvent<HTMLLIElement>) => {
-    (event.target as HTMLLIElement).style.backgroundColor = "#b1ff9c";
-    (event.target as HTMLLIElement).style.outline = "2px solid #b1ff9c";
-    (event.target as HTMLLIElement).style.outlineOffset = "4px";
-    (event.target as HTMLLIElement).style.transform = "scale(1.2)";
+    event.preventDefault();
+    (event.currentTarget as HTMLLIElement).style.backgroundColor = "#b1ff9c";
+    (event.currentTarget as HTMLLIElement).style.outline = "2px solid #b1ff9c";
+    (event.currentTarget as HTMLLIElement).style.outlineOffset = "4px";
+    (event.currentTarget as HTMLLIElement).style.transform = "scale(1.2)";
   };
   const handleDragLeave = (event: DragEvent<HTMLLIElement>) => {
-    (event.target as HTMLLIElement).style.backgroundColor = "#fff";
-    (event.target as HTMLLIElement).style.outline = "none";
-    (event.target as HTMLLIElement).style.transform = "scale(1)";
+    (event.currentTarget as HTMLLIElement).style.backgroundColor = "#fff";
+    (event.currentTarget as HTMLLIElement).style.outline = "none";
+    (event.currentTarget as HTMLLIElement).style.transform = "scale(1)";
   };
 
   const monthData =
@@ -85,10 +86,30 @@ const Schedule: FunctionComponent = observer(() => {
               draggable
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
-              onDragStart={(e) => {
+              onDragStart={() => {
                 setSelectDay(el);
               }}
-              onDragEnd={() => {}}
+              onDrop={(event) => {
+                const newData = [...monthData].map((item) => {
+                  if (item.day === el.day) {
+                    return { ...selectDay!, day: el.day };
+                  }
+                  if (item.day === selectDay?.day) {
+                    return { ...el, day: selectDay.day };
+                  }
+                  return item;
+                });
+                SavedMonthStore.addNewSavedData(
+                  currentYear,
+                  currentMonth,
+                  newData
+                );
+                (event.currentTarget as HTMLLIElement).style.backgroundColor =
+                  "#fff";
+                (event.currentTarget as HTMLLIElement).style.outline = "none";
+                (event.currentTarget as HTMLLIElement).style.transform =
+                  "scale(1)";
+              }}
             >
               {el.day}
               {!!el.task.length && <p>{el.task}</p>}
