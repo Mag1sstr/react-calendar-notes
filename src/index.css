@@ -1,32 +1,59 @@
-:root {
-  --body-background: #e7bfc9;
-  --month-color: #b6828e;
-  --week-day-background: #813e4d;
-  --button-background: #1560bd;
-}
-@font-face {
-  font-family: "Custom";
-  src: url(/src/fonts/TeXGyreAdventor-Bold.ttf);
-  font-weight: 700;
-}
-@font-face {
-  font-family: "Custom";
-  src: url(/src/fonts/TeXGyreAdventor-Regular.ttf);
-  font-weight: 400;
-}
+@import "tailwindcss";
 
+@font-face {
+  font-family: "GOT";
+  font-weight: 400;
+  src: url(./fonts/centurygothic.ttf);
+}
+@font-face {
+  font-family: "GOT";
+  font-weight: 700;
+  src: url(./fonts/centurygothic_bold.ttf);
+}
+:root {
+  --bg-col: #f1f3f550;
+  --text-col: #3a3a3a;
+}
+body {
+  font-family: "GOT";
+  background: radial-gradient(circle at top, #d1d5db, #6b7280, #111827);
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  /* background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E"); */
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  animation: noise 0.4s infinite;
+}
+@keyframes noise {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-2%, 1%);
+  }
+  50% {
+    transform: translate(1%, -2%);
+  }
+  75% {
+    transform: translate(-1%, -1%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
 * {
-  padding: 0;
-  margin: 0;
   box-sizing: border-box;
 }
-
-body {
-  font-family: "Custom";
-  font-weight: 400;
-  background-color: var(--body-background);
-}
-
-::-webkit-scrollbar {
-  display: none;
+.glass {
+  position: relative;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+  padding: 32px;
 }

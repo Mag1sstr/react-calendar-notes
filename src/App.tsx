@@ -1,11 +1,14 @@
-import Calendar from "./components/Calendar/Calendar";
+import type { FunctionComponent } from "react";
+import Schedule from "./components/Schedule";
 
-function App() {
+interface AppProps {}
+
+const App: FunctionComponent<AppProps> = () => {
   return (
     <>
-      <Calendar />
+      <Schedule />
     </>
   );
-}
+};
 
 export default App;
