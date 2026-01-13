@@ -1,4 +1,4 @@
-import type { FunctionComponent } from "react";
+import { useRef, type FunctionComponent } from "react";
 
 interface Props {
   setCurrentMonth: (n: number | ((prev: number) => number)) => void;
@@ -11,6 +11,8 @@ const SwitchMonth: FunctionComponent<Props> = ({
   setCurrentYear,
   currentMonth,
 }) => {
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const handleNextMonth = () => {
     if (currentMonth < 11) {
       setCurrentMonth((prev) => prev + 1);
@@ -27,10 +29,39 @@ const SwitchMonth: FunctionComponent<Props> = ({
       setCurrentYear((prev) => prev - 1);
     }
   };
+
+  const handleStartTimer = (type: "next" | "prev") => {
+    if (timerRef.current) return;
+
+    timerRef.current = setTimeout(() => {
+      if (type === "next") {
+        handleNextMonth();
+      } else {
+        handlePrevMonth();
+      }
+      timerRef.current = null;
+    }, 1000);
+  };
+  const handleStopTimer = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
   return (
     <div className="flex gap-2 my-5">
       <div
         onClick={handlePrevMonth}
+        onDragOver={(e) => {
+          e.preventDefault();
+          (e.target as HTMLDivElement).style.transform = "scale(1.2)";
+          handleStartTimer("prev");
+        }}
+        onDragLeave={(e) => {
+          (e.target as HTMLDivElement).style.transform = "scale(1)";
+          handleStopTimer();
+        }}
         className="bg-white/35
   backdrop-blur-sm
   border border-white/50
@@ -40,18 +71,21 @@ const SwitchMonth: FunctionComponent<Props> = ({
   transition
   hover:bg-white/50
   rotate-180"
-        onDragOver={(item) => {
-          (item.target as HTMLDivElement).style.transform = "scale(1.2)";
-        }}
-        onDragLeave={(item) => {
-          (item.target as HTMLDivElement).style.transform = "scale(1)";
-        }}
       >
         ▶
       </div>
 
       <div
         onClick={handleNextMonth}
+        onDragOver={(e) => {
+          e.preventDefault();
+          (e.target as HTMLDivElement).style.transform = "scale(1.2)";
+          handleStartTimer("next");
+        }}
+        onDragLeave={(e) => {
+          (e.target as HTMLDivElement).style.transform = "scale(1)";
+          handleStopTimer();
+        }}
         className="bg-white/35
   backdrop-blur-sm
   border border-white/50
