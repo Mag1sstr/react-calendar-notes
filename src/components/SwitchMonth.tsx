@@ -55,11 +55,11 @@ const SwitchMonth: FunctionComponent<Props> = ({
         onClick={handlePrevMonth}
         onDragOver={(e) => {
           e.preventDefault();
-          (e.target as HTMLDivElement).style.transform = "scale(1.2)";
+          (e.currentTarget as HTMLDivElement).style.transform = "scale(1.2)";
           handleStartTimer("prev");
         }}
         onDragLeave={(e) => {
-          (e.target as HTMLDivElement).style.transform = "scale(1)";
+          (e.currentTarget as HTMLDivElement).style.transform = "scale(1)";
           handleStopTimer();
         }}
         className="bg-white/35
@@ -79,11 +79,11 @@ const SwitchMonth: FunctionComponent<Props> = ({
         onClick={handleNextMonth}
         onDragOver={(e) => {
           e.preventDefault();
-          (e.target as HTMLDivElement).style.transform = "scale(1.2)";
+          (e.currentTarget as HTMLDivElement).style.transform = "scale(1.2)";
           handleStartTimer("next");
         }}
         onDragLeave={(e) => {
-          (e.target as HTMLDivElement).style.transform = "scale(1)";
+          (e.currentTarget as HTMLDivElement).style.transform = "scale(1)";
           handleStopTimer();
         }}
         className="bg-white/35

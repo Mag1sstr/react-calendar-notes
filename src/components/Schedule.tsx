@@ -32,15 +32,16 @@ const Schedule: FunctionComponent = observer(() => {
 
   const handleDragOver = (event: DragEvent<HTMLLIElement>) => {
     event.preventDefault();
-    (event.currentTarget as HTMLLIElement).style.backgroundColor = "#b1ff9c";
-    (event.currentTarget as HTMLLIElement).style.outline = "2px solid #b1ff9c";
-    (event.currentTarget as HTMLLIElement).style.outlineOffset = "4px";
-    (event.currentTarget as HTMLLIElement).style.transform = "scale(1.2)";
+    event.currentTarget.style.backgroundColor = "#b1ff9c";
+    event.currentTarget.style.outline = "2px solid #b1ff9c";
+    event.currentTarget.style.outlineOffset = "4px";
+    event.currentTarget.style.transform = "scale(1.2)";
   };
+
   const handleDragLeave = (event: DragEvent<HTMLLIElement>) => {
-    (event.currentTarget as HTMLLIElement).style.backgroundColor = "#fff";
-    (event.currentTarget as HTMLLIElement).style.outline = "none";
-    (event.currentTarget as HTMLLIElement).style.transform = "scale(1)";
+    event.currentTarget.style.backgroundColor = "#fff";
+    event.currentTarget.style.outline = "none";
+    event.currentTarget.style.transform = "scale(1)";
   };
 
   const monthData =
@@ -80,7 +81,7 @@ const Schedule: FunctionComponent = observer(() => {
           {monthData.map((el) => (
             <li
               key={el.day}
-              className={`p-[20px] font-bold text-[18px] rounded-lg cursor-pointer transition-all hover:scale-110 hover:shadow-lg word-break `}
+              className={`group relative p-[20px] font-bold text-[18px] rounded-lg cursor-pointer transition-all z-10  hover:shadow-lg word-break hover:scale-110`}
               style={{ backgroundColor: el.taskColor ?? "#fff" }}
               onClick={() => handleClickTask(el)}
               draggable
@@ -102,7 +103,7 @@ const Schedule: FunctionComponent = observer(() => {
                 SavedMonthStore.addNewSavedData(
                   currentYear,
                   currentMonth,
-                  newData
+                  newData,
                 );
                 (event.currentTarget as HTMLLIElement).style.backgroundColor =
                   "#fff";
@@ -111,8 +112,16 @@ const Schedule: FunctionComponent = observer(() => {
                   "scale(1)";
               }}
             >
-              {el.day}
-              {!!el.task.length && <p>{el.task}</p>}
+              <p className="text-2xl">{el.day}</p>
+              <p className="text-[1rem] font-normal overflow-hidden text-ellipsis">
+                {el.task}
+              </p>
+              {!!el.task.length && (
+                <div
+                  className={`absolute invisible top-0 left-0 w-[200px] h-[300px] transition-all z-50 group-hover:visible`}
+                  style={{ backgroundColor: el.taskColor! }}
+                ></div>
+              )}
             </li>
           ))}
         </ul>
