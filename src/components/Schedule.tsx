@@ -82,7 +82,7 @@ const Schedule: FunctionComponent = observer(() => {
           {monthData.map((el) => (
             <li
               key={el.day}
-              className={`group relative p-2 lg:p-[20px] font-bold text-[18px] rounded-lg cursor-pointer transition-all z-10  ${el.day === currDate.getDate() ? "bg-indigo-600!" : "bg-white"} ${new Date(currentYear, currentMonth, el.day).getTime() < currDate.getTime() && "opacity-40 cursor-not-allowed!"} hover:shadow-lg word-break hover:scale-110`}
+              className={`group relative p-2 lg:p-[20px] font-bold text-[18px] rounded-lg cursor-pointer transition-all z-10  ${el.day === currDate.getDate() ? "bg-indigo-600!" : "bg-white"} ${new Date(currentYear, currentMonth, el.day) < new Date(currDate.setHours(0, 0, 0, 0)) && "opacity-40 cursor-not-allowed!"} hover:shadow-lg word-break hover:scale-110`}
               style={{ backgroundColor: el.taskColor ?? "#fff" }}
               onClick={() => handleClickTask(el)}
               draggable
@@ -114,7 +114,7 @@ const Schedule: FunctionComponent = observer(() => {
                   "scale(1)";
               }}
             >
-              {el.day === 1 && showDargHelp && (
+              {el.day === currDate.getDate() && showDargHelp && (
                 <>
                   <svg
                     className="pointer-events-none absolute left-[25%] top-[25%] h-8 w-8 animate-[dragCursor_3s_ease-in-out_infinite]"
