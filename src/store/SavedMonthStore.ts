@@ -1,15 +1,11 @@
 import { makeAutoObservable } from "mobx";
 import type { IMonth } from "../components/Schedule";
+import { getLocalStorageValue } from "../helper/getLocalStorageValue";
 
-interface ISavedMonth {
+export interface ISavedMonth {
   year: number;
   month: number;
   data: IMonth[];
-}
-
-function getLocalStorageValue<T>(name: string) {
-  const data = localStorage.getItem(name);
-  return data ? (JSON.parse(data) as T) : [];
 }
 
 class SavedMonthStore {
@@ -19,7 +15,7 @@ class SavedMonthStore {
   }
   addNewSavedData(year: number, month: number, data: IMonth[]) {
     const index = this.savedData.findIndex(
-      (el) => el.year === year && el.month === month
+      (el) => el.year === year && el.month === month,
     );
     if (index !== -1) {
       this.savedData[index] = { year, month, data };
@@ -30,7 +26,7 @@ class SavedMonthStore {
   }
   getMonth(year: number, month: number) {
     const savedData = this.savedData.find(
-      (el) => el.year === year && el.month === month
+      (el) => el.year === year && el.month === month,
     )?.data;
     return savedData;
   }
