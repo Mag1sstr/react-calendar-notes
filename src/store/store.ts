@@ -7,12 +7,16 @@ interface IStore {
   savedData: ISavedMonth[];
   addNewSavedData: (y: number, m: number, d: IMonth[]) => void;
   getMonth: (y: number, m: number) => IMonth[] | undefined;
+  menu: [x: number, y: number] | null;
+  setMenu: (v: [x: number, y: number] | null) => void;
 }
 
 export const useStore = create<IStore>()(
   persist(
     (set, get) => ({
       savedData: [],
+      menu: null,
+      setMenu: (menu) => set({ menu }),
       addNewSavedData: (year: number, month: number, data: IMonth[]) => {
         const index = get().savedData.findIndex(
           (el) => el.year === year && el.month === month,
