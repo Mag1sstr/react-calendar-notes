@@ -4,13 +4,12 @@ import { useClickOutside } from "../helper/useClickOutside";
 
 function ActionMenu() {
   const { menu, setMenu } = useStore();
-  const ref = useRef<HTMLDivElement>(null);
-  useClickOutside(ref, () => setMenu(null));
+  // const ref = useRef<HTMLDivElement>(null);
+  // useClickOutside(ref, () => setMenu(null));
 
   if (!menu) return null;
   return (
     <div
-      ref={ref}
       className="
         fixed z-50 w-[180px]
         overflow-hidden
@@ -26,6 +25,7 @@ function ActionMenu() {
         left: menu[0],
         top: menu[1],
       }}
+      onClick={(e) => e.stopPropagation()}
     >
       <button
         className="

@@ -3,12 +3,14 @@ import type { ISavedMonth } from "./SavedMonthStore";
 import type { IMonth } from "../components/Schedule";
 import { persist } from "zustand/middleware";
 
+type MenuState = { x: number; y: number; day: IMonth } | null;
+
 interface IStore {
   savedData: ISavedMonth[];
   addNewSavedData: (y: number, m: number, d: IMonth[]) => void;
   getMonth: (y: number, m: number) => IMonth[] | undefined;
-  menu: [x: number, y: number] | null;
-  setMenu: (v: [x: number, y: number] | null) => void;
+  menu: MenuState;
+  setMenu: (v: MenuState) => void;
 }
 
 export const useStore = create<IStore>()(
