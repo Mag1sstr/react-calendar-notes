@@ -1,6 +1,16 @@
+import { useRef } from "react";
+import { useStore } from "../store/store";
+import { useClickOutside } from "../helper/useClickOutside";
+
 function ActionMenu() {
+  const { menu, setMenu } = useStore();
+  const ref = useRef<HTMLDivElement>(null);
+  useClickOutside(ref, () => setMenu(null));
+
+  if (!menu) return null;
   return (
     <div
+      ref={ref}
       className="
         fixed z-50 w-[180px]
         overflow-hidden
@@ -11,6 +21,11 @@ function ActionMenu() {
         shadow-[0_10px_35px_rgba(0,0,0,0.12)]
         animate-in fade-in zoom-in-95 duration-100
       "
+      style={{
+        visibility: menu ? "visible" : "hidden",
+        left: menu[0],
+        top: menu[1],
+      }}
     >
       <button
         className="

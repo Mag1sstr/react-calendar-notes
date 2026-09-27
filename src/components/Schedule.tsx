@@ -1,4 +1,9 @@
-import { useState, type DragEvent, type FunctionComponent } from "react";
+import {
+  useRef,
+  useState,
+  type DragEvent,
+  type FunctionComponent,
+} from "react";
 import { monthNames } from "../constants";
 import SwitchMonth from "./SwitchMonth";
 import { getFirstDayInMonth } from "../helper/getFirstDayInMonth";
@@ -6,6 +11,8 @@ import WeekDays from "./WeekDays";
 import CreateTaskModal from "./CreateTaskModal";
 import { observer } from "mobx-react-lite";
 import SavedMonthStore from "../store/SavedMonthStore";
+import { useStore } from "../store/store";
+import { useClickOutside } from "../helper/useClickOutside";
 
 export interface IMonth {
   day: number;
@@ -19,6 +26,8 @@ const Schedule: FunctionComponent = observer(() => {
   const [openModal, setOpenModal] = useState(false);
   const [selectDay, setSelectDay] = useState<null | IMonth>(null);
   const [showDargHelp, setShowDragHelp] = useState(true);
+
+  const { setMenu } = useStore();
 
   const currDate = new Date();
 
@@ -84,7 +93,10 @@ const Schedule: FunctionComponent = observer(() => {
               key={el.day}
               className={`group relative p-2 lg:p-[20px] font-bold text-[18px] rounded-lg cursor-pointer transition-all z-10  ${el.day === currDate.getDate() ? "bg-indigo-600!" : "bg-white"} ${new Date(currentYear, currentMonth, el.day) < new Date(currDate.setHours(0, 0, 0, 0)) && "opacity-40 cursor-not-allowed!"} hover:shadow-lg word-break hover:scale-110`}
               style={{ backgroundColor: el.taskColor ?? "#fff" }}
-              onClick={() => handleClickTask(el)}
+              onClick={(e) => {
+                // handleClickTask(el);
+                setMenu([e.clientX, e.clientY]);
+              }}
               draggable
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
