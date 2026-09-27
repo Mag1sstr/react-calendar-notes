@@ -1,11 +1,11 @@
-import { useRef } from "react";
 import { useStore } from "../store/store";
-import { useClickOutside } from "../helper/useClickOutside";
-
-function ActionMenu() {
-  const { menu, setMenu } = useStore();
-  // const ref = useRef<HTMLDivElement>(null);
-  // useClickOutside(ref, () => setMenu(null));
+interface IProps {
+  onAdd?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
+}
+function ActionMenu({ onAdd, onDelete, onEdit }: IProps) {
+  const { menu } = useStore();
 
   if (!menu) return null;
   return (
@@ -22,8 +22,8 @@ function ActionMenu() {
       "
       style={{
         visibility: menu ? "visible" : "hidden",
-        left: menu[0],
-        top: menu[1],
+        left: menu.x,
+        top: menu.y,
       }}
       onClick={(e) => e.stopPropagation()}
     >
@@ -35,6 +35,7 @@ function ActionMenu() {
           transition-colors
           hover:bg-[#F5F5F5]
         "
+        onClick={onAdd}
       >
         <span className="text-[18px]">＋</span>
         Добавить
@@ -48,6 +49,7 @@ function ActionMenu() {
           transition-colors
           hover:bg-[#F5F5F5]
         "
+        onClick={onEdit}
       >
         <span className="text-[17px]">✎</span>
         Изменить
@@ -63,6 +65,7 @@ function ActionMenu() {
           transition-colors
           hover:bg-[#FFF1F1]
         "
+        onClick={onDelete}
       >
         <span className="text-[17px]">⌫</span>
         Удалить

@@ -1,4 +1,5 @@
 import {
+  useEffect,
   useRef,
   useState,
   type DragEvent,
@@ -13,6 +14,7 @@ import { observer } from "mobx-react-lite";
 import SavedMonthStore from "../store/SavedMonthStore";
 import { useStore } from "../store/store";
 import { useClickOutside } from "../helper/useClickOutside";
+import ActionMenu from "./ActionMenu";
 
 export interface IMonth {
   day: number;
@@ -27,7 +29,7 @@ const Schedule: FunctionComponent = observer(() => {
   const [selectDay, setSelectDay] = useState<null | IMonth>(null);
   const [showDargHelp, setShowDragHelp] = useState(true);
 
-  const { setMenu } = useStore();
+  const { setMenu, menu } = useStore();
 
   const currDate = new Date();
 
@@ -59,8 +61,17 @@ const Schedule: FunctionComponent = observer(() => {
 
   console.log(selectDay?.day);
 
+  useEffect(() => {
+    function closeMenu() {
+      setMenu(null);
+    }
+    document.addEventListener("click", closeMenu);
+    return () => document.removeEventListener("click", closeMenu);
+  }, []);
+
   return (
     <div className="w-full min-h-screen  flex items-center justify-center">
+      <ActionMenu onAdd={() => handleClickTask(menu!.day)} />
       <CreateTaskModal
         currentMonth={currentMonth}
         currentYear={currentYear}
@@ -94,8 +105,9 @@ const Schedule: FunctionComponent = observer(() => {
               className={`group relative p-2 lg:p-[20px] font-bold text-[18px] rounded-lg cursor-pointer transition-all z-10  ${el.day === currDate.getDate() ? "bg-indigo-600!" : "bg-white"} ${new Date(currentYear, currentMonth, el.day) < new Date(currDate.setHours(0, 0, 0, 0)) && "opacity-40 cursor-not-allowed!"} hover:shadow-lg word-break hover:scale-110`}
               style={{ backgroundColor: el.taskColor ?? "#fff" }}
               onClick={(e) => {
+                e.stopPropagation();
                 // handleClickTask(el);
-                setMenu([e.clientX, e.clientY]);
+                setMenu({ x: e.clientX, y: e.clientY, day: el });
               }}
               draggable
               onDragOver={handleDragOver}
