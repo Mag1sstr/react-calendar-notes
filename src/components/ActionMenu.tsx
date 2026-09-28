@@ -12,7 +12,6 @@ function ActionMenu({ onAdd, onDelete, onEdit }: IProps) {
     <div
       className="
         fixed z-50 w-[180px]
-        overflow-hidden
         rounded-xl
         border border-[#EAEAEA]
         bg-white
@@ -22,11 +21,12 @@ function ActionMenu({ onAdd, onDelete, onEdit }: IProps) {
       "
       style={{
         visibility: menu ? "visible" : "hidden",
-        left: menu.x,
-        top: menu.y,
+        left: menu.x + 16,
+        top: menu.y - 42,
       }}
       onClick={(e) => e.stopPropagation()}
     >
+      <div className="absolute w-3 h-3 bg-white top-10 right-full translate-x-1/2 rotate-45 z-40"></div>
       <button
         className="
           flex w-full items-center gap-3
