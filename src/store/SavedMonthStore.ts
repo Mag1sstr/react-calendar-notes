@@ -9,7 +9,7 @@ export interface ISavedMonth {
 }
 
 class SavedMonthStore {
-  savedData: ISavedMonth[] = getLocalStorageValue<ISavedMonth[]>("data");
+  savedData: ISavedMonth[] = getLocalStorageValue<ISavedMonth[]>("data") ?? [];
   constructor() {
     makeAutoObservable(this);
   }

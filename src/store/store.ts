@@ -40,6 +40,6 @@ export const useStore = create<IStore>()(
           ?.data,
     }),
 
-    { name: "data" },
+    { name: "zdata" },
   ),
 );
