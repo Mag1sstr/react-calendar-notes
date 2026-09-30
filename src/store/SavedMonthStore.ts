@@ -30,6 +30,18 @@ class SavedMonthStore {
     )?.data;
     return savedData;
   }
+  deleteTask(year: number, month: number, day: number) {
+    this.savedData = this.savedData.map((data) =>
+      data.year === year && data.month === month
+        ? {
+            ...data,
+            data: data.data.map((el) =>
+              el.day === day ? { ...el, taskColor: null, task: "" } : el,
+            ),
+          }
+        : data,
+    );
+  }
 }
 
 export default new SavedMonthStore();

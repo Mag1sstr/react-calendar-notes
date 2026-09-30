@@ -1,23 +1,29 @@
+import { Delete, Edit, Plus } from "lucide-react";
 import { useStore } from "../store/store";
+import { observer } from "mobx-react-lite";
 interface IProps {
   onAdd?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
 }
-function ActionMenu({ onAdd, onDelete, onEdit }: IProps) {
+const ActionMenu = observer(({ onAdd, onDelete, onEdit }: IProps) => {
   const { menu } = useStore();
 
   if (!menu) return null;
   return (
     <div
       className="
-        fixed z-50 w-[180px]
+        fixed z-50 w-auto 
         rounded-xl
         border border-[#EAEAEA]
         bg-white
         p-1.5
         shadow-[0_10px_35px_rgba(0,0,0,0.12)]
         animate-in fade-in zoom-in-95 duration-100
+
+      [&>button>p]:hidden
+      sm:[&>button>p]:block
+      sm:w-[180px]
       "
       style={{
         visibility: menu ? "visible" : "hidden",
@@ -26,7 +32,7 @@ function ActionMenu({ onAdd, onDelete, onEdit }: IProps) {
       }}
       onClick={(e) => e.stopPropagation()}
     >
-      <div className="absolute w-3 h-3 bg-white top-10 right-full translate-x-1/2 rotate-45 z-40"></div>
+      <div className="absolute  w-3 h-3 bg-white top-10 right-full translate-x-1/2 rotate-45 z-40"></div>
       <button
         className="
           flex w-full items-center gap-3
@@ -37,8 +43,8 @@ function ActionMenu({ onAdd, onDelete, onEdit }: IProps) {
         "
         onClick={onAdd}
       >
-        <span className="text-[18px]">＋</span>
-        Добавить
+        <Plus size={18} />
+        <p>Добавить</p>
       </button>
 
       <button
@@ -51,8 +57,8 @@ function ActionMenu({ onAdd, onDelete, onEdit }: IProps) {
         "
         onClick={onEdit}
       >
-        <span className="text-[17px]">✎</span>
-        Изменить
+        <Edit size={18} />
+        <p>Изменить</p>
       </button>
 
       <div className="my-1 h-px bg-[#F0F0F0]" />
@@ -67,11 +73,11 @@ function ActionMenu({ onAdd, onDelete, onEdit }: IProps) {
         "
         onClick={onDelete}
       >
-        <span className="text-[17px]">⌫</span>
-        Удалить
+        <Delete size={18} />
+        <p>Удалить</p>
       </button>
     </div>
   );
-}
+});
 
 export default ActionMenu;
