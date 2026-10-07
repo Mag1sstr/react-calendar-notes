@@ -71,7 +71,12 @@ const Schedule: FunctionComponent = observer(() => {
 
   return (
     <div className="w-full min-h-screen  flex items-center justify-center">
-      <ActionMenu onAdd={() => handleClickTask(menu!.day)} />
+      <ActionMenu
+        onAdd={() => handleClickTask(menu!.day)}
+        onDelete={() =>
+          SavedMonthStore.deleteTask(currentYear, currentMonth, menu!.day.day)
+        }
+      />
       <CreateTaskModal
         currentMonth={currentMonth}
         currentYear={currentYear}

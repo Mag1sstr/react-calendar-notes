@@ -9,7 +9,7 @@ export interface ISavedMonth {
 }
 
 class SavedMonthStore {
-  savedData: ISavedMonth[] = getLocalStorageValue<ISavedMonth[]>("data");
+  savedData: ISavedMonth[] = getLocalStorageValue<ISavedMonth[]>("data") ?? [];
   constructor() {
     makeAutoObservable(this);
   }
@@ -29,6 +29,18 @@ class SavedMonthStore {
       (el) => el.year === year && el.month === month,
     )?.data;
     return savedData;
+  }
+  deleteTask(year: number, month: number, day: number) {
+    this.savedData = this.savedData.map((data) =>
+      data.year === year && data.month === month
+        ? {
+            ...data,
+            data: data.data.map((el) =>
+              el.day === day ? { ...el, taskColor: null, task: "" } : el,
+            ),
+          }
+        : data,
+    );
   }
 }
 
