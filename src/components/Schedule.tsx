@@ -15,6 +15,7 @@ import SavedMonthStore from "../store/SavedMonthStore";
 import { useStore } from "../store/store";
 import { useClickOutside } from "../helper/useClickOutside";
 import ActionMenu from "./ActionMenu";
+import { motion } from "motion/react";
 
 export interface IMonth {
   day: number;
@@ -70,7 +71,12 @@ const Schedule: FunctionComponent = observer(() => {
   }, []);
 
   return (
-    <div className="w-full min-h-screen  flex items-center justify-center">
+    <motion.div
+      initial={{ scale: 0.6, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ delay: 2, duration: 1, ease: [0.65, 0, 0.35, 1] }}
+      className="w-full min-h-screen  flex items-center justify-center"
+    >
       <ActionMenu
         onAdd={() => handleClickTask(menu!.day)}
         onDelete={() =>
@@ -188,7 +194,7 @@ const Schedule: FunctionComponent = observer(() => {
           ))}
         </ul>
       </div>
-    </div>
+    </motion.div>
   );
 });
 
