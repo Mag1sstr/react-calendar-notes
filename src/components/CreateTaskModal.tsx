@@ -2,6 +2,8 @@ import { observer } from "mobx-react-lite";
 import { useRef, type FormEvent, type FunctionComponent } from "react";
 import type { IMonth } from "./Schedule";
 import { createTask } from "../helper/createTask";
+import { useStore } from "../store/store";
+import { getRandomTaskColor } from "../helper/getRandomTaskColor";
 
 interface IProps {
   open: boolean;
@@ -15,21 +17,33 @@ interface IProps {
 const CreateTaskModal: FunctionComponent<IProps> = observer(
   ({ open, setOpen, currentMonth, currentYear, data, selectDay }) => {
     const valueRef = useRef<HTMLInputElement | null>(null);
-
+    const { addNewSavedData } = useStore();
     const handleSubmit = (e: FormEvent) => {
       e.preventDefault();
-
-      if (valueRef.current && valueRef.current.value.length > 0) {
-        createTask(
-          data,
-          selectDay,
-          currentYear,
-          currentMonth,
-          valueRef.current.value,
-        );
-        setOpen(false);
-        valueRef.current!.value = "";
-      }
+      if (!valueRef.current?.value.length) return;
+      const newData = [...data].map((el) => {
+        if (el.day === selectDay!.day) {
+          return {
+            ...el,
+            task: valueRef.current?.value,
+            taskColor: getRandomTaskColor(),
+          };
+        }
+        return el;
+      });
+      addNewSavedData(currentYear, currentMonth, newData as IMonth[]);
+      setOpen(false);
+      // if (valueRef.current && valueRef.current.value.length > 0) {
+      //   createTask(
+      //     data,
+      //     selectDay,
+      //     currentYear,
+      //     currentMonth,
+      //     valueRef.current.value,
+      //   );
+      //   setOpen(false);
+      //   valueRef.current!.value = "";
+      // }
     };
 
     return (

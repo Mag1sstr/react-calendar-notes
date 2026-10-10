@@ -1,6 +1,5 @@
 import {
   useEffect,
-  useRef,
   useState,
   type DragEvent,
   type FunctionComponent,
@@ -13,7 +12,6 @@ import CreateTaskModal from "./CreateTaskModal";
 import { observer } from "mobx-react-lite";
 import SavedMonthStore from "../store/SavedMonthStore";
 import { useStore } from "../store/store";
-import { useClickOutside } from "../helper/useClickOutside";
 import ActionMenu from "./ActionMenu";
 import { motion } from "motion/react";
 
@@ -30,7 +28,7 @@ const Schedule: FunctionComponent = observer(() => {
   const [selectDay, setSelectDay] = useState<null | IMonth>(null);
   const [showDargHelp, setShowDragHelp] = useState(true);
 
-  const { setMenu, menu } = useStore();
+  const { setMenu, menu, getMonth } = useStore();
 
   const currDate = new Date();
 
@@ -57,10 +55,7 @@ const Schedule: FunctionComponent = observer(() => {
     event.currentTarget.style.transform = "scale(1)";
   };
 
-  const monthData =
-    SavedMonthStore.getMonth(currentYear, currentMonth) ?? daysCurrMonth;
-
-  console.log(selectDay?.day);
+  const monthData = getMonth(currentYear, currentMonth) ?? daysCurrMonth;
 
   useEffect(() => {
     function closeMenu() {
@@ -72,7 +67,7 @@ const Schedule: FunctionComponent = observer(() => {
 
   return (
     <motion.div
-      initial={{ scale: 0.6, opacity: 0 }}
+      initial={{ scale: 0.7, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ delay: 2, duration: 1, ease: [0.65, 0, 0.35, 1] }}
       className="w-full min-h-screen  flex items-center justify-center"
