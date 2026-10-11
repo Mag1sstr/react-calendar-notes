@@ -11,6 +11,13 @@ interface IStore {
   getMonth: (y: number, m: number) => IMonth[] | undefined;
   menu: MenuState;
   setMenu: (v: MenuState) => void;
+  deleteTask: (y: number, m: number, d: number) => void;
+  updateTask: (
+    year: number,
+    month: number,
+    day: number,
+    newTaskValue: string,
+  ) => void;
 }
 
 export const useStore = create<IStore>()(
@@ -38,6 +45,52 @@ export const useStore = create<IStore>()(
       getMonth: (year: number, month: number) =>
         get().savedData.find((el) => el.year === year && el.month === month)
           ?.data,
+
+      updateTask: (
+        year: number,
+        month: number,
+        day: number,
+        newTaskValue: string,
+      ) => {
+        return set((state) => ({
+          savedData: state.savedData.map((saved) =>
+            saved.year === year && saved.month === month
+              ? {
+                  ...saved,
+                  data: saved.data.map((v) =>
+                    v.day === day ? { ...v, task: newTaskValue } : v,
+                  ),
+                }
+              : saved,
+          ),
+        }));
+      },
+      deleteTask(year: number, month: number, day: number) {
+        return set((state) => ({
+          savedData: state.savedData.map((data) =>
+            data.year === year && data.month === month
+              ? {
+                  ...data,
+                  data: data.data.map((el) =>
+                    el.day === day ? { ...el, taskColor: null, task: "" } : el,
+                  ),
+                }
+              : data,
+          ),
+        }));
+      },
+
+      //   deleteTask(year: number, month: number, day: number) {
+      // return set(state=>({savedData:state.savedData.map((data) =>
+      //   data.year === year && data.month === month
+      //     ? {
+      //         ...data,
+      //         data: data.data.map((el) =>
+      //           el.day === day ? { ...el, taskColor: null, task: "" } : el,
+      //         ),
+      //       }
+      //     : data,
+      // }
     }),
 
     { name: "zdata" },

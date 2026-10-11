@@ -7,7 +7,7 @@ interface IProps {
   onDelete?: () => void;
 }
 const ActionMenu = observer(({ onAdd, onDelete, onEdit }: IProps) => {
-  const { menu } = useStore();
+  const { menu, deleteTask } = useStore();
 
   if (!menu) return null;
   return (
@@ -47,19 +47,21 @@ const ActionMenu = observer(({ onAdd, onDelete, onEdit }: IProps) => {
         <p>Добавить</p>
       </button>
 
-      <button
-        className="
+      {!!menu.day.task.length && (
+        <button
+          className="
           flex w-full items-center gap-3
           rounded-lg px-3 py-2.5
           text-[14px] font-medium text-[#333]
           transition-colors
           hover:bg-[#F5F5F5]
         "
-        onClick={onEdit}
-      >
-        <Edit size={18} />
-        <p>Изменить</p>
-      </button>
+          onClick={onEdit}
+        >
+          <Edit size={18} />
+          <p>Изменить</p>
+        </button>
+      )}
 
       <div className="my-1 h-px bg-[#F0F0F0]" />
 
