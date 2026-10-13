@@ -1,7 +1,9 @@
 import {
   useEffect,
+  useRef,
   useState,
   type DragEvent,
+  type FormEvent,
   type FunctionComponent,
 } from "react";
 import { monthNames } from "../constants";
@@ -28,8 +30,9 @@ const Schedule: FunctionComponent = observer(() => {
   const [selectDay, setSelectDay] = useState<null | IMonth>(null);
   const [showDargHelp, setShowDragHelp] = useState(true);
   const [openEdit, setOpenEdit] = useState(0);
+  const editValueRef = useRef<HTMLInputElement>(null);
 
-  const { setMenu, menu, getMonth, deleteTask } = useStore();
+  const { setMenu, menu, getMonth, deleteTask, updateTask } = useStore();
 
   const currDate = new Date();
 
@@ -56,6 +59,12 @@ const Schedule: FunctionComponent = observer(() => {
     event.currentTarget.style.transform = "scale(1)";
   };
 
+  const handleEdit = (e: FormEvent, day: number) => {
+    e.preventDefault();
+    if (!editValueRef.current) return;
+    updateTask(currentYear, currentMonth, day, editValueRef.current?.value);
+    setOpenEdit(0);
+  };
   const monthData = getMonth(currentYear, currentMonth) ?? daysCurrMonth;
 
   useEffect(() => {
@@ -65,6 +74,14 @@ const Schedule: FunctionComponent = observer(() => {
     document.addEventListener("click", closeMenu);
     return () => document.removeEventListener("click", closeMenu);
   }, []);
+
+  console.log(openEdit);
+
+  useEffect(() => {
+    if (openEdit) {
+      editValueRef.current?.focus();
+    }
+  }, [openEdit]);
 
   return (
     <motion.div
@@ -77,6 +94,10 @@ const Schedule: FunctionComponent = observer(() => {
         onAdd={() => handleClickTask(menu!.day)}
         onDelete={() => {
           deleteTask(currentYear, currentMonth, menu!.day.day);
+          setMenu(null);
+        }}
+        onEdit={() => {
+          setOpenEdit(selectDay!.day);
           setMenu(null);
         }}
       />
@@ -116,8 +137,8 @@ const Schedule: FunctionComponent = observer(() => {
                 onClick={(e) => {
                   e.stopPropagation();
                   // handleClickTask(el);
+                  setSelectDay(el);
                   setMenu({ x: e.clientX, y: e.clientY, day: el });
-                  setOpenEdit(el.day);
                 }}
                 draggable
                 onDragOver={handleDragOver}
@@ -181,10 +202,17 @@ const Schedule: FunctionComponent = observer(() => {
                 )}
                 <p className="lg:text-2xl">{el.day}</p>
                 {openEdit === el.day ? (
-                  <input
-                    type="text"
-                    className="w-full bg-white outline-none text-[14px] p-2 rounded-2xl"
-                  />
+                  <form
+                    onSubmit={(e) => handleEdit(e, el.day)}
+                    onKeyDown={(e) => e.key === "Escape" && setOpenEdit(0)}
+                  >
+                    <input
+                      ref={editValueRef}
+                      defaultValue={el.task}
+                      type="text"
+                      className="w-full bg-white outline-none text-[14px] p-2 rounded-2xl"
+                    />
+                  </form>
                 ) : (
                   <p className="text-[1rem] font-normal overflow-hidden text-ellipsis">
                     {el.task}
